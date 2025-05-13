@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  fastapi:
+    build: .
+    container_name: fastapi-app
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    environment:
+      - PYTHONUNBUFFERED=1
+    networks:
+      - taskapp-network
+
+
+  db:
+    image: postgres:13
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: taskapp_db
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - taskapp-network
+    ports:
+      - "5432:5432"
+
+
+networks:
+  taskapp-network:
+    driver: bridge
+
+
+volumes:
+  postgres-data:
